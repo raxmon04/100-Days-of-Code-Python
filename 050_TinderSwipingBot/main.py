@@ -27,8 +27,8 @@ print(driver.title)
 
 email = driver.find_element(By.XPATH, value='//*[@id="email"]')
 password = driver.find_element(By.XPATH, value='//*[@id="pass"]')
-email.send_keys(FB_EMAIL)
-password.send_keys(FB_PASSWORD)
+# email.send_keys(FB_EMAIL)
+# password.send_keys(FB_PASSWORD)
 password.send_keys(Keys.ENTER)
 
 driver.switch_to.window(base_window)
