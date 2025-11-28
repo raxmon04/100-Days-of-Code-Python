@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 import time
 
 # Constants
@@ -34,15 +34,18 @@ class InternetSpeedTwitterBot:
         email_input = self.wait.until(ec.presence_of_element_located((By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[4]/label/div/div[2]/div/input')))
         email_input.send_keys(TWITTER_EMAIL)
         email_input.send_keys(Keys.ENTER)
-        password_input = self.wait.until(ec.presence_of_element_located((By.XPATH, '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[3]/div/label/div/div[2]/div[1]/input')))
-        password_input.send_keys(TWITTER_PASSWORD)
-        password_input.send_keys(Keys.ENTER)
-        time.sleep(5)
-        tweet_compose = self.wait.until(ec.presence_of_element_located((By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[1]/div/div/div/div/div/div/div/div/label/div[1]/div/div/div/div/div[2]/div/div/div')))
-        tweet = f"Hey Internet Provider, why is my internet speed {self.down}down/{self.up}up when I pay for {PROMISED_DOWN}down/{PROMISED_UP}up?"
-        tweet_compose.send_keys(tweet)
-        tweet_button = self.wait.until(ec.presence_of_element_located((By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[3]/div/div/div[2]/div[3]/div/span/span')))
-        tweet_button.click()
+        try:
+            password_input = self.wait.until(ec.presence_of_element_located((By.XPATH, '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[3]/div/label/div/div[2]/div[1]/input')))
+            password_input.send_keys(TWITTER_PASSWORD)
+            password_input.send_keys(Keys.ENTER)
+            time.sleep(5)
+            tweet_compose = self.wait.until(ec.presence_of_element_located((By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[1]/div/div/div/div/div/div/div/div/label/div[1]/div/div/div/div/div[2]/div/div/div')))
+            tweet = f"Hey Internet Provider, why is my internet speed {self.down}down/{self.up}up when I pay for {PROMISED_DOWN}down/{PROMISED_UP}up?"
+            tweet_compose.send_keys(tweet)
+            tweet_button = self.wait.until(ec.presence_of_element_located((By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[3]/div/div/div[2]/div[3]/div/span/span')))
+            tweet_button.click()
+        except TimeoutException:
+            print("There was a login issue. X thinks you are a bot.")
 
 bot = InternetSpeedTwitterBot()
 
